@@ -67,6 +67,11 @@ A Windows desktop app that downloads YouTube videos or extracts audio as MP3 –
 3. **Double-click** the `.exe` to launch the GUI.  
 4. **Enter** your YouTube URL, pick **MP4** or **MP3**, optionally choose a download folder, and **Download**.  
 5. On the first run, a `settings.json` file is created next to the `.exe` to remember your chosen folder on future launches.
+6. *(Optional)* **Create a Shortcut**:  
+   - Right-click on `GetSongs.exe` → *Create shortcut*.  
+   - Right-click on the new shortcut → *Properties*.  
+   - Under the **Run** dropdown, select **Minimized**.  
+   - This helps hide any console window if you did not build the `.exe` with `--noconsole`.
 
 > **Tip**: Place `GetSongs.exe` somewhere you have write access, so it can store `settings.json` and download files.
 
