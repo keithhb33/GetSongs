@@ -11,15 +11,20 @@ except ImportError:
     sys.exit(1)
 
 # ------------------------------------------------------------------------------
-# Determine the base directory: if running from source, use script folder;
-# if running as a frozen exe, use the folder of the .exe.
+# Distinguish between running from .py vs. running as a frozen .exe
 # ------------------------------------------------------------------------------
-if getattr(sys, 'frozen', False):
-    BASE_DIR = os.path.dirname(sys.executable)  # folder containing the .exe
-else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FROZEN = getattr(sys, 'frozen', False)
 
-CONFIG_FILE = os.path.join(BASE_DIR, "settings.json")
+if FROZEN:
+    # Running inside PyInstaller .exe
+    ASSETS_DIR = sys._MEIPASS  # Where embedded files (like dj.ico) are unpacked
+    APP_DIR = os.path.dirname(sys.executable)  # Folder containing the .exe
+else:
+    # Running from source .py
+    ASSETS_DIR = os.path.dirname(os.path.abspath(__file__))
+    APP_DIR = ASSETS_DIR
+
+CONFIG_FILE = os.path.join(APP_DIR, "settings.json")
 
 # ------------------------------------------------------------------------------
 # Load config (last save directory) or default to current directory
@@ -109,7 +114,8 @@ root = tk.Tk()
 root.title("YouTube Downloader")
 root.resizable(False, False)
 
-icon_path = os.path.join(BASE_DIR, os.path.join("assets", "dj.ico"))
+# Load the embedded icon from inside the exe
+icon_path = os.path.join(ASSETS_DIR, "dj.ico")
 if os.path.exists(icon_path):
     root.iconbitmap(icon_path)
 else:
@@ -147,6 +153,7 @@ ttk.Label(root, text="Save Location:").grid(row=3, column=0, padx=10, pady=10, s
 save_entry_var = tk.StringVar(value=save_directory)
 save_entry = ttk.Entry(root, textvariable=save_entry_var, width=40, state="readonly")
 save_entry.grid(row=3, column=1, padx=10, pady=10, sticky="w")
+
 browse_button = ttk.Button(root, text="Browse...", command=choose_directory)
 browse_button.grid(row=3, column=2, padx=10, pady=10, sticky="w")
 
